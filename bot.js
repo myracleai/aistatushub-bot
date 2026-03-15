@@ -218,33 +218,13 @@ async function tweetSummary() {
 
 // ── Startup: seed existing state, no tweets on boot ───────────────
 async function startupCheck() {
-  console.log(`[${new Date().toISOString()}] 🌱 Seeding initial state (no tweets on boot)...`);
+  console.log(`[${new Date().toISOString()}] 🤖 Bot starting — going live immediately`);
 
-  for (const svc of STATUS_PAGES) {
-    try {
-      if (svc.type !== 'statuspage') continue;
-      const data = await fetchJSON(svc.url);
-      (data.incidents  || []).forEach(inc  => seenIncidents.add(inc.id));
-      (data.components || []).forEach(comp => {
-        const key = `${svc.id}:${comp.id}`;
-        lastComponentStatus[key] = comp.status;
-        if (comp.status !== 'operational') {
-          currentOutages.set(key, { name: svc.name, component: comp.name, status: comp.status });
-        }
-      });
-    } catch(e) { /* ignore */ }
-    await new Promise(r => setTimeout(r, 800));
-  }
-
-  console.log(`[${new Date().toISOString()}] ✅ Seeded ${seenIncidents.size} existing incidents`);
-  console.log(`[${new Date().toISOString()}] 🤖 Bot running — checks every 5 min, summary every 6 hours`);
-
-  // Tweet first summary immediately so you know the bot is alive
+  // Tweet first summary right away
   await tweetSummary();
 
   // Start loops
   setInterval(checkAll, CHECK_EVERY);
   setInterval(tweetSummary, SUMMARY_EVERY);
 }
-
 startupCheck();
