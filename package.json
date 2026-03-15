@@ -1,0 +1,15 @@
+{
+  "name": "aistatushub-bot",
+  "version": "1.0.0",
+  "description": "AIStatusHub Twitter bot — monitors 39 AI services and auto-tweets",
+  "main": "status-monitor.js",
+  "scripts": {
+    "start": "node status-monitor.js"
+  },
+  "dependencies": {
+    "twitter-api-v2": "^1.17.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
